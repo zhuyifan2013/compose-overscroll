@@ -10,18 +10,17 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.yifan.overscroll.*
 
 enum class Example {
@@ -64,7 +63,7 @@ class SampleActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sample = intent.extras?.get("sample_id") ?: Example.OverScrollHeader
-
+        actionBar?.title = sample.toString()
         setContent {
             when (sample) {
                 Example.OverScrollHeader -> OverScrollHeader()
@@ -85,6 +84,28 @@ class SampleActivity : ComponentActivity() {
 }
 
 @Composable
+fun OverScrollBasic() {
+    var state: OverScrollState = remember { OverScrollState() }
+    OverScroll(overScrollState = { state = it }) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            Box(
+                modifier = Modifier
+                    .overScrollHeader(state)
+                    .fillMaxWidth()
+            )
+            repeat(20) {
+                SampleItem(it)
+            }
+        }
+
+    }
+}
+
+@Composable
 fun OverScrollHeader() {
     var state: OverScrollState = remember {
         OverScrollState()
@@ -95,17 +116,9 @@ fun OverScrollHeader() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Image(
-                painter = painterResource(R.drawable.spiderman),
-                contentDescription = null,
-                modifier = Modifier
-                    .overScrollHeader(state)
-                    .height(300.dp)
-                    .layoutId("image"),
-                contentScale = ContentScale.Crop
-            )
+            NarutoHeader(state)
             repeat(20) {
-                SampleItem()
+                SampleItem(it)
             }
         }
 
@@ -123,18 +136,10 @@ fun OverScrollLazyColumn() {
                 .fillMaxSize()
         ) {
             item {
-                Image(
-                    painter = painterResource(R.drawable.spiderman),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .overScrollHeader(state)
-                        .height(300.dp)
-                        .layoutId("image"),
-                    contentScale = ContentScale.Crop
-                )
+                NarutoHeader(state)
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
@@ -151,24 +156,14 @@ fun OverScrollParallax() {
                 .fillMaxSize()
         ) {
             item {
-                Box {
-                    Image(
-                        painter = painterResource(R.drawable.spiderman),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .overScrollHeader(state)
-                            .height(300.dp)
-                            .layoutId("image"),
-                        contentScale = ContentScale.Crop
-                    )
-                    Column(modifier = Modifier.padding(start = 20.dp, top = 70.dp)) {
+                NarutoHeader(state) {
+                    Column(modifier = Modifier.padding(start = 20.dp, top = 50.dp)) {
                         Button(
                             onClick = {},
-                            modifier = Modifier.overScrollParallaxVertical(state, maxParallaxOffset = 100f)
+                            modifier = Modifier.overScrollParallaxVertical(state)
                         ) {
                             Text("Parallax default")
                         }
-
                         Button(
                             onClick = {},
                             modifier = Modifier
@@ -177,7 +172,6 @@ fun OverScrollParallax() {
                         ) {
                             Text("Parallax 200")
                         }
-
                         Button(
                             onClick = {},
                             modifier = Modifier
@@ -196,12 +190,10 @@ fun OverScrollParallax() {
                             Text("Parallax Horizontal default")
                         }
                     }
-
                 }
-
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
@@ -219,15 +211,7 @@ fun OverScrollScale() {
         ) {
             item {
                 Box {
-                    Image(
-                        painter = painterResource(R.drawable.spiderman),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .overScrollHeader(state)
-                            .height(300.dp)
-                            .layoutId("image"),
-                        contentScale = ContentScale.Crop
-                    )
+                    NarutoHeader(state)
                     Column(modifier = Modifier.padding(start = 20.dp, top = 70.dp)) {
                         Button(
                             onClick = {},
@@ -267,8 +251,8 @@ fun OverScrollScale() {
                 }
 
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
@@ -286,15 +270,7 @@ fun OverScrollRotation() {
         ) {
             item {
                 Box {
-                    Image(
-                        painter = painterResource(R.drawable.spiderman),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .overScrollHeader(state)
-                            .height(300.dp)
-                            .layoutId("image"),
-                        contentScale = ContentScale.Crop
-                    )
+                    NarutoHeader(state)
                     Column(modifier = Modifier.padding(start = 20.dp, top = 70.dp)) {
                         Button(
                             onClick = {},
@@ -334,8 +310,8 @@ fun OverScrollRotation() {
                 }
 
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
@@ -353,15 +329,7 @@ fun OverScrollCombine() {
         ) {
             item {
                 Box {
-                    Image(
-                        painter = painterResource(R.drawable.spiderman),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .overScrollHeader(state)
-                            .height(300.dp)
-                            .layoutId("image"),
-                        contentScale = ContentScale.Crop
-                    )
+                    NarutoHeader(state)
                     Column(
                         modifier = Modifier
                             .padding(start = 20.dp, top = 70.dp)
@@ -381,7 +349,7 @@ fun OverScrollCombine() {
                             onClick = {},
                             modifier = Modifier
                                 .overScrollParallaxHorizontal(state)
-                                .overScrollAlpha(state)
+                                .overScrollScale(state)
                                 .padding(top = 20.dp)
                         ) {
                             Text("Scale and Parallax")
@@ -392,8 +360,8 @@ fun OverScrollCombine() {
                 }
 
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
@@ -407,15 +375,10 @@ fun OverScrollEmptyHeader() {
     OverScroll(overScrollState = { state = it }) {
         LazyColumn(modifier = Modifier.overScrollParallaxVertical(state, maxParallaxOffset = 800f)) {
             item {
-                Image(
-                    painter = painterResource(R.drawable.spiderman),
-                    contentDescription = null,
-                    modifier = Modifier.height(300.dp),
-                    contentScale = ContentScale.Crop
-                )
+                NarutoHeader(state)
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
@@ -432,17 +395,10 @@ fun OverScrollCustomAnimation1() {
     ) {
         LazyColumn {
             item {
-                Image(
-                    painter = painterResource(R.drawable.spiderman),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .overScrollHeader(state)
-                        .height(300.dp),
-                    contentScale = ContentScale.Crop
-                )
+                NarutoHeader(state)
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
@@ -459,21 +415,15 @@ fun OverScrollCustomAnimation2() {
     ) {
         LazyColumn {
             item {
-                Image(
-                    painter = painterResource(R.drawable.spiderman),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .overScrollHeader(state)
-                        .height(300.dp),
-                    contentScale = ContentScale.Crop
-                )
+                NarutoHeader(state)
             }
-            items(20) {
-                SampleItem()
+            items(20) { index ->
+                SampleItem(index)
             }
         }
     }
 }
+
 @Preview
 @Composable
 fun OverScrollAdvanced() {
@@ -485,33 +435,61 @@ fun OverScrollAdvanced() {
     ) {
         LazyColumn {
             item {
-                Image(
-                    painter = painterResource(R.drawable.spiderman),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .overScrollHeader(state)
-                        .height(300.dp),
-                    contentScale = ContentScale.Crop
-                )
+                NarutoHeader(state)
             }
             items(20) { index ->
                 val maxSpacer = index * 30 / 20f
                 Column {
-                    SampleItem(narutoItem = narutos[index % narutos.size], height = (maxSpacer * state.progress).dp)
+                    SampleItem(index = index, height = (maxSpacer * state.progress).dp)
                 }
             }
         }
     }
 }
 
+@Composable
+fun NarutoHeader(state: OverScrollState = OverScrollState(), content: @Composable () -> Unit = {}) {
+    Card(
+        modifier = Modifier
+            .overScrollHeader(state)
+            .fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(R.drawable.naruto_death),
+            contentDescription = null,
+
+            contentScale = ContentScale.Crop
+        )
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .background(Color(0x2F000000)), verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp), verticalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "Naruto", color = Color.White, fontSize = 30.sp)
+                    Text(text = "Hard work is worthless for those that don’t believe in themselves - Naruto", color = Color.White, fontSize = 14.sp)
+                }
+            }
+        }
+        content()
+    }
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SampleItem(modifier: Modifier = Modifier, narutoItem: NarutoItem = narutos[0], height: Dp = 0.dp) {
+fun SampleItem(index: Int = 0, height: Dp = 0.dp) {
+    val narutoItem = narutos[index % narutos.size]
     ListItem(text = { Text(narutoItem.name) },
         icon = {
-            Image(painter = painterResource(narutoItem.image), contentDescription = narutoItem.name)
+            Image(painter = painterResource(narutoItem.image), contentDescription = narutoItem.name, modifier = Modifier.size(40.dp))
         })
-    Divider(modifier = Modifier.padding(horizontal = 30.dp))
+    Divider(modifier = Modifier.padding(horizontal = 30.dp), thickness = (0.5).dp)
     Box(
         modifier = Modifier
             .fillMaxWidth()

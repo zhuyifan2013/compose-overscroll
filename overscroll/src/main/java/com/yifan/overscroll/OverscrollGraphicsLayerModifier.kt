@@ -9,8 +9,11 @@ import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.unit.Constraints
 import com.google.android.material.math.MathUtils.lerp
 
+internal const val DefaultHeaderHeight = 800f
+
 internal class OverscrollGraphicsLayerModifier(
     private val overScrollState: OverScrollState,
+    private val headerHeight: Float = DefaultHeaderHeight,
     private val maxOffset: Float = overScrollState.maxOffset,
     private val maxScaleMultiple: Float = 1.0f,
     private val maxParallaxOffset: Float = 100f,
@@ -23,11 +26,9 @@ internal class OverscrollGraphicsLayerModifier(
         measurable: Measurable,
         constraints: Constraints
     ): MeasureResult {
-        val placeable = measurable.measure(constraints)
         val offset = overScrollState.offSet
         val process = offset / maxOffset
 
-        var newScale = 1.0f
         var newTranslationY = 0f
         var newTranslationX = 0f
         var newAlpha = 1.0f
@@ -35,15 +36,22 @@ internal class OverscrollGraphicsLayerModifier(
         var newRotationX = 0f
         var newRotationY = 0f
 
-        Log.i("yifan", "process : $process")
+        val newHeaderHeight = headerHeight + offset
+        val placeable = if (effect == OverScrollEffect.Header) {
+            measurable.measure(constraints.copy(minHeight = newHeaderHeight.toInt(), maxHeight = newHeaderHeight.toInt()))
+        } else {
+            measurable.measure(constraints)
+        }
+
+        val scaleFactor = lerp(1.0f, maxScaleMultiple, process)
+        val newHeight = scaleFactor * placeable.measuredHeight
+
         when (effect) {
             OverScrollEffect.Scale -> {
-                newScale = lerp(1.0f, maxScaleMultiple, process)
-                newTranslationX = (placeable.width * (newScale - 1)) / 2
-                newTranslationY = (placeable.height * (newScale - 1)) / 2
+                newTranslationX = (placeable.width * (scaleFactor - 1)) / 2
+                newTranslationY = (placeable.height * (scaleFactor - 1)) / 2
             }
             OverScrollEffect.ScaleCenter -> {
-                newScale = lerp(1.0f, maxScaleMultiple, process)
             }
             OverScrollEffect.ParallaxVertical -> {
                 newTranslationY = lerp(0f, maxParallaxOffset, process)
@@ -52,8 +60,6 @@ internal class OverscrollGraphicsLayerModifier(
                 newTranslationX = lerp(0f, maxParallaxOffset, process)
             }
             OverScrollEffect.Header -> {
-                newScale = (placeable.height + offset) / placeable.height
-                newTranslationY = offset / 2
             }
             OverScrollEffect.Alpha -> {
                 newAlpha = lerp(1.0f, finalAlpha, process)
@@ -68,10 +74,9 @@ internal class OverscrollGraphicsLayerModifier(
                 newRotationX = lerp(0f, rotationMultiple * 360, process)
             }
         }
-        val newHeight = placeable.height * newScale
         val layerBlock: GraphicsLayerScope.() -> Unit = {
-            scaleX = newScale
-            scaleY = newScale
+            scaleX = scaleFactor
+            scaleY = scaleFactor
             translationY = newTranslationY
             translationX = newTranslationX
             alpha = newAlpha

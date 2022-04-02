@@ -21,7 +21,7 @@ enum class OverScrollEffect {
     RotationCenter,
     RotationVertical,
     RotationHorizontal,
-    Header
+    Header,
 }
 
 @Stable

@@ -108,9 +108,11 @@ fun Modifier.overScrollRotationHorizontal(
 
 fun Modifier.overScrollHeader(
     overScrollState: OverScrollState,
+    headerHeight: Float = DefaultHeaderHeight,
 ) = this.then(
     OverscrollGraphicsLayerModifier(
         overScrollState = overScrollState,
+        headerHeight = headerHeight,
         effect = OverScrollEffect.Header
     )
 )

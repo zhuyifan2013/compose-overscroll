@@ -22,7 +22,7 @@
         <activity
             android:name="com.yifan.overscrollsample.SampleActivity"
             android:exported="true"
-            android:theme="@style/Theme.OverScroll" />
+            android:theme="@android:style/Theme.Material.Light"/>
     </application>
 
 </manifest>
