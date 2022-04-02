@@ -84,7 +84,6 @@ class SampleActivity : ComponentActivity() {
 
 }
 
-@Preview
 @Composable
 fun OverScrollHeader() {
     var state: OverScrollState = remember {
@@ -113,7 +112,6 @@ fun OverScrollHeader() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollLazyColumn() {
     var state: OverScrollState = remember {
@@ -142,7 +140,6 @@ fun OverScrollLazyColumn() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollParallax() {
     var state: OverScrollState = remember {
@@ -210,7 +207,6 @@ fun OverScrollParallax() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollScale() {
     var state: OverScrollState = remember {
@@ -278,7 +274,6 @@ fun OverScrollScale() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollRotation() {
     var state: OverScrollState = remember {
@@ -346,7 +341,6 @@ fun OverScrollRotation() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollCombine() {
     var state: OverScrollState = remember {
@@ -368,7 +362,11 @@ fun OverScrollCombine() {
                             .layoutId("image"),
                         contentScale = ContentScale.Crop
                     )
-                    Column(modifier = Modifier.padding(start = 20.dp, top = 70.dp).fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 20.dp, top = 70.dp)
+                            .fillMaxWidth()
+                    ) {
                         Button(
                             onClick = {},
                             modifier = Modifier
@@ -401,7 +399,6 @@ fun OverScrollCombine() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollEmptyHeader() {
     var state: OverScrollState = remember {
@@ -424,7 +421,6 @@ fun OverScrollEmptyHeader() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollCustomAnimation1() {
     var state: OverScrollState = remember {
@@ -452,7 +448,6 @@ fun OverScrollCustomAnimation1() {
     }
 }
 
-@Preview
 @Composable
 fun OverScrollCustomAnimation2() {
     var state: OverScrollState = remember {
@@ -479,7 +474,6 @@ fun OverScrollCustomAnimation2() {
         }
     }
 }
-
 @Preview
 @Composable
 fun OverScrollAdvanced() {
@@ -503,7 +497,7 @@ fun OverScrollAdvanced() {
             items(20) { index ->
                 val maxSpacer = index * 30 / 20f
                 Column {
-                    SampleItem(height = (maxSpacer * state.progress).dp)
+                    SampleItem(narutoItem = narutos[index % narutos.size], height = (maxSpacer * state.progress).dp)
                 }
             }
         }
@@ -512,17 +506,12 @@ fun OverScrollAdvanced() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SampleItem(modifier: Modifier = Modifier, height: Dp = 0.dp) {
-    ListItem(text = { Text("OverScroll item") },
+fun SampleItem(modifier: Modifier = Modifier, narutoItem: NarutoItem = narutos[0], height: Dp = 0.dp) {
+    ListItem(text = { Text(narutoItem.name) },
         icon = {
-            Icon(
-                Icons.Filled.Favorite,
-                contentDescription = null,
-                modifier = modifier.size(40.dp),
-                tint = Color.Red
-            )
+            Image(painter = painterResource(narutoItem.image), contentDescription = narutoItem.name)
         })
-    Divider()
+    Divider(modifier = Modifier.padding(horizontal = 30.dp))
     Box(
         modifier = Modifier
             .fillMaxWidth()
