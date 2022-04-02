@@ -1,3 +1,6 @@
+![黑白立体格子简约LinkedIn Banner (2)](https://user-images.githubusercontent.com/3753079/161373650-8e533f1a-e047-4da1-b5d0-eb29b54a7d12.png)
+
+
 # OverScroll for Compose
 
 Easy to use but very powerful component to create over scroll effects for any composables. 
@@ -120,8 +123,21 @@ Rotate composable when over scrolling based on Y-axis.
 -  rotationMultiple : `1` means you want to rotate 360 degress when you over scroll to the max offset.
 
 
-
-
-
 # License
+
+Copyright 2022 Yifan Zhu
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Source: http://opensource.org/licenses/Apache-2.0
 
